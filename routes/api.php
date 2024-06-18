@@ -1,0 +1,39 @@
+<?php
+
+use App\Http\Controllers\CarUnitsCT;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserLoginCT; 
+use App\Http\Controllers\UserRegisterCT;
+use App\Http\Controllers\OrderCT;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\CarRecomendsCT;
+
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
+|
+*/
+
+Route::post('register', [UserRegisterCT::class, 'register']);
+Route::post('login', [UserLoginCT::class, 'login']);
+
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('carunits', [CarUnitsCT::class, 'showApi']);
+    Route::post('orders/{car_unit_id}', [OrderCT::class, 'store']);
+    Route::delete('order/{order_id}/cancel', [OrderCT::class, 'cancelOrder']);
+    Route::get('car-recommendations', [CarRecomendsCT::class, 'index']);
+    Route::get('carunits/{id}', [CarUnitsCT::class, 'showApiById']);
+    Route::get('/users/{id}', [UserController::class, 'show']);
+    Route::put('/users/{id}', [UserController::class, 'update']);
+    
+});
